@@ -4,11 +4,6 @@
 - Next.js 14 (App Router)
 - TypeScript 유지
 - Tailwind CSS 4 유지
-- Lucide React 유지
-- motion 유지
-- react-router 제거
-- MUI 제거
-- 사용되지 않는 `components/ui/*` 전체 제거
 
 ## 실행
 ```bash
