@@ -1,22 +1,18 @@
 import Link from 'next/link';
 import { ChevronLeft, ExternalLink } from 'lucide-react';
-import { getArticleById } from '../../_data/mock-data';
+import { fetchArticleById, formatDate } from '../../_lib/api';
 
-/**
- * 기사 상세 페이지
- * 요구사항:
- * - 전체 내용을 긁어온 우리 사이트 내부 페이지
- * - 모든 화면에서 이 페이지로 연결됨
- */
 export default async function ArticleDetailPage({
   params,
-}: {
+}: Readonly<{
   params: Promise<{ id: string }>;
-}) {
+}>) {
   const { id } = await params;
-  const article = getArticleById(Number(id));
 
-  if (!article) {
+  let article;
+  try {
+    article = await fetchArticleById(Number(id));
+  } catch {
     return (
       <div className="space-y-4">
         <Link
@@ -25,13 +21,14 @@ export default async function ArticleDetailPage({
         >
           <ChevronLeft className="w-4 h-4" /> 홈으로
         </Link>
-
         <div className="bg-[#1F2937] rounded-2xl border border-gray-800 p-6">
           <h2 className="text-xl font-bold text-white">기사를 찾을 수 없습니다.</h2>
         </div>
       </div>
     );
   }
+
+  const content = article.crawlerContent ?? article.content;
 
   return (
     <div className="space-y-6">
@@ -62,21 +59,23 @@ export default async function ArticleDetailPage({
               <span className="px-2 py-1 rounded bg-gray-800 text-gray-300">
                 {article.categoryName}
               </span>
-              <span className="text-gray-500">{article.publishedAt}</span>
+              <span className="text-gray-500">{formatDate(article.publishedAt)}</span>
             </div>
 
             <h1 className="text-2xl font-bold leading-tight text-white">{article.title}</h1>
           </div>
 
-          <section className="rounded-xl border border-gray-800 bg-[#111827]/40 p-4">
-            <h2 className="text-sm font-bold text-[#3B82F6] mb-2">요약</h2>
-            <p className="text-sm text-gray-300 leading-7">{article.summary}</p>
-          </section>
+          {article.summary && (
+            <section className="rounded-xl border border-gray-800 bg-[#111827]/40 p-4">
+              <h2 className="text-sm font-bold text-[#3B82F6] mb-2">요약</h2>
+              <p className="text-sm text-gray-300 leading-7">{article.summary}</p>
+            </section>
+          )}
 
           <section className="space-y-3">
             <h2 className="text-sm font-bold text-[#3B82F6]">전체 기사 내용</h2>
             <div className="text-[15px] text-gray-200 leading-8 whitespace-pre-line">
-              {article.content}
+              {content}
             </div>
           </section>
 

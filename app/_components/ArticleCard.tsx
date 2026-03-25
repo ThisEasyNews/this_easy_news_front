@@ -4,11 +4,18 @@ import type { Article } from '../_types';
 
 /**
  * 여러 페이지에서 공통으로 쓰는 기사 카드 컴포넌트
- * - 언론사 상세
- * - 카테고리 상세
- * 등에서 재사용
+ * - badge='media'  (기본): 언론사명 뱃지 → 카테고리 상세 페이지
+ * - badge='category': 카테고리명 뱃지 → 언론사 상세 페이지
  */
-export default function ArticleCard({ article }: { article: Article }) {
+export default function ArticleCard({
+  article,
+  badge = 'media',
+}: Readonly<{
+  article: Article;
+  badge?: 'media' | 'category';
+}>) {
+  const badgeText = badge === 'category' ? article.categoryName : article.mediaName;
+
   return (
     <div className="p-5 bg-[#1F2937] rounded-xl border border-gray-800 hover:border-[#3B82F6]/50 transition-colors group">
       <div className="flex justify-between items-start gap-4 mb-3">
@@ -19,8 +26,8 @@ export default function ArticleCard({ article }: { article: Article }) {
           {article.title}
         </Link>
 
-        <div className="text-[10px] text-[#3B82F6] font-bold px-2 py-1 bg-[#3B82F6]/10 rounded uppercase">
-          {article.mediaName}
+        <div className="text-[10px] text-[#3B82F6] font-bold px-2 py-1 bg-[#3B82F6]/10 rounded uppercase shrink-0">
+          {badgeText}
         </div>
       </div>
 

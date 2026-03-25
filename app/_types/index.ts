@@ -8,6 +8,83 @@ export type Publisher = {
   color: string;
 };
 
+// ──────────────────────────────────────────
+// 백엔드 API 응답 타입
+// ──────────────────────────────────────────
+
+export type PageResponse<T> = {
+  content: T[];
+  page: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
+  first: boolean;
+  last: boolean;
+};
+
+export type PublisherResponse = {
+  id: string;
+  name: string;
+  iconText: string;
+  color: string; // hex color e.g. "#EF4444"
+};
+
+export type CategoryResponse = {
+  id: string;
+  name: string;
+  countText?: string;
+};
+
+export type NewsResponse = {
+  id: number;
+  title: string;
+  content: string;
+  crawlerContent: string;
+  feedparserContent: string;
+  description: string;
+  summary: string;
+  mediaId: string;
+  mediaName: string;
+  categoryId: string;
+  categoryName: string;
+  publishedAt: string; // ISO datetime
+  url: string;
+  imageUrl: string;
+};
+
+export type BriefingSummaryItem = {
+  id: number;
+  articleId: number | null;
+  title: string;
+  summaryContent: string;
+  topImageUrl: string;
+};
+
+export type BriefingResponse = {
+  id: number;
+  title: string;
+  keywords: string[];
+  imageUrl: string;
+  summaries: BriefingSummaryItem[];
+};
+
+export type RelatedArticleResponse = {
+  id: number;
+  originalTitle: string;
+  mediaName: string;
+  categoryName: string;
+  publishedAt: string; // ISO datetime
+  url: string;
+};
+
+export type KeywordResponse = {
+  id: string;
+  keyword: string;
+  mentionCount: number;
+  relatedArticleCount: number;
+  relatedArticles: RelatedArticleResponse[];
+};
+
 /**
  * 카테고리 타입
  */

@@ -1,21 +1,40 @@
 import Link from 'next/link';
 import { ChevronLeft, Filter } from 'lucide-react';
-import { PUBLISHERS, getArticlesByPublisherId } from '../../_data/mock-data';
+import { fetchArticlesByPublisher, fetchPublishers, formatDate } from '../../_lib/api';
 import ArticleCard from '../../_components/ArticleCard';
+import type { Article } from '../../_types';
 
-/**
- * 언론사 상세 페이지
- * 요구사항:
- * 1. 언론사 -> 기사 클릭 -> 아티클 디테일
- */
 export default async function PublisherDetailPage({
   params,
-}: {
+}: Readonly<{
   params: Promise<{ id: string }>;
-}) {
+}>) {
   const { id } = await params;
-  const publisher = PUBLISHERS.find((item) => item.id === id);
-  const articles = getArticlesByPublisherId(id);
+
+  const [publishersResult, articlesResult] = await Promise.allSettled([
+    fetchPublishers(),
+    fetchArticlesByPublisher(id),
+  ]);
+
+  const publishers = publishersResult.status === 'fulfilled' ? publishersResult.value : [];
+  const articles: Article[] =
+    articlesResult.status === 'fulfilled'
+      ? articlesResult.value.content.map((a) => ({
+          id: a.id,
+          title: a.title,
+          summary: a.summary,
+          content: a.crawlerContent ?? a.content,
+          mediaId: a.mediaId,
+          mediaName: a.mediaName,
+          categoryId: a.categoryId,
+          categoryName: a.categoryName,
+          publishedAt: formatDate(a.publishedAt),
+          url: a.url,
+          imageUrl: a.imageUrl,
+        }))
+      : [];
+
+  const publisher = publishers.find((p) => p.id === id);
 
   return (
     <div className="space-y-6">
@@ -35,11 +54,17 @@ export default async function PublisherDetailPage({
         </div>
       </div>
 
-      <div className="space-y-4">
-        {articles.map((article) => (
-          <ArticleCard key={article.id} article={article} />
-        ))}
-      </div>
+      {articles.length === 0 ? (
+        <div className="bg-[#1F2937] rounded-2xl border border-gray-800 p-6 text-center text-gray-400">
+          기사가 없습니다.
+        </div>
+      ) : (
+        <div className="space-y-4">
+          {articles.map((article) => (
+            <ArticleCard key={article.id} article={article} badge="category" />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
