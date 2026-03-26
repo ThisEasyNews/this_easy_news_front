@@ -28,7 +28,7 @@ export default async function ArticleDetailPage({
     );
   }
 
-  const content = article.crawlerContent ?? article.content;
+  const content = article.feedparserContent ?? article.content;
 
   return (
     <div className="space-y-6">
