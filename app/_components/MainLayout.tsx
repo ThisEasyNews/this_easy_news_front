@@ -10,7 +10,7 @@ const TABS = [
   { id: 'keywords', label: 'HOT 키워드', path: '/keywords' },
   { id: 'publishers', label: '언론사', path: '/publishers' },
   { id: 'categories', label: '카테고리', path: '/categories' },
-  { id: 'mypage', label: 'MY', path: '/mypage' },
+  // { id: 'mypage', label: 'MY', path: '/mypage' }, # 마이페이지는 일단 숨김. 로그인 기능과 함께 추후에 공개할 예정
 ];
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
