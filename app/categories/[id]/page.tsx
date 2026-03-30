@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import { ChevronLeft } from 'lucide-react';
 import { fetchArticlesByCategory, fetchCategories, formatDate } from '../../_lib/api';
-import ArticleCard from '../../_components/ArticleCard';
 import type { Article } from '../../_types';
 
 export default async function CategoryDetailPage({
@@ -59,7 +58,49 @@ export default async function CategoryDetailPage({
       ) : (
         <div className="space-y-4">
           {articles.map((article) => (
-            <ArticleCard key={article.id} article={article} />
+            <Link
+              key={article.id}
+              href={`/article-detail/${article.id}`}
+              className="block overflow-hidden rounded-2xl border border-gray-800 bg-[#1F2937] transition hover:-translate-y-0.5 hover:border-[#3B82F6] hover:bg-[#243041]"
+            >
+              {article.imageUrl && (
+                <div className="h-52 overflow-hidden">
+                  <img
+                    src={article.imageUrl}
+                    alt={article.title}
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+              )}
+
+              <div className="p-5 space-y-3">
+                <div className="flex flex-wrap items-center gap-2 text-xs">
+                  {article.mediaName && (
+                    <span className="px-2 py-1 rounded bg-[#3B82F6]/10 text-[#3B82F6] font-bold">
+                      {article.mediaName}
+                    </span>
+                  )}
+                  {article.categoryName && (
+                    <span className="px-2 py-1 rounded bg-gray-800 text-gray-300">
+                      {article.categoryName}
+                    </span>
+                  )}
+                  {article.publishedAt && (
+                    <span className="text-gray-500">{article.publishedAt}</span>
+                  )}
+                </div>
+
+                <h3 className="text-lg font-bold leading-snug text-white">
+                  {article.title}
+                </h3>
+
+                {article.summary && (
+                  <p className="text-sm leading-7 text-gray-300 line-clamp-3">
+                    {article.summary}
+                  </p>
+                )}
+              </div>
+            </Link>
           ))}
         </div>
       )}

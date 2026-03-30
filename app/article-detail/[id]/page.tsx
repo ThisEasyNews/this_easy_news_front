@@ -1,9 +1,8 @@
-import Link from 'next/link';
-import { ChevronLeft, ExternalLink } from 'lucide-react';
+import { ExternalLink } from 'lucide-react';
 import { fetchArticleById, formatDate } from '../../_lib/api';
+import BackButton from '../../_components/BackButton';
 
 const INSIGHT_CATEGORIES = ['정치', '경제', 'IT·과학'];
-debugger;
 
 export default async function ArticleDetailPage({
   params,
@@ -18,12 +17,7 @@ export default async function ArticleDetailPage({
   } catch {
     return (
       <div className="space-y-4">
-        <Link
-          href="/"
-          className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-[#3B82F6]"
-        >
-          <ChevronLeft className="w-4 h-4" /> 홈으로
-        </Link>
+        <BackButton />
 
         <div className="bg-[#1F2937] rounded-2xl border border-gray-800 p-6">
           <h2 className="text-xl font-bold text-white">기사를 찾을 수 없습니다.</h2>
@@ -38,12 +32,7 @@ export default async function ArticleDetailPage({
 
   return (
     <div className="space-y-6">
-      <Link
-        href="/"
-        className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-[#3B82F6] transition-colors"
-      >
-        <ChevronLeft className="w-4 h-4" /> 이전 화면으로
-      </Link>
+      <BackButton />
 
       <article className="bg-[#1F2937] rounded-2xl border border-gray-800 overflow-hidden">
         {article.imageUrl && (
