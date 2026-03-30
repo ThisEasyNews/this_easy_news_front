@@ -50,6 +50,7 @@ export type NewsResponse = {
   publishedAt: string; // ISO datetime
   url: string;
   imageUrl: string;
+  insight?: string;
 };
 
 export type BriefingSummaryItem = {
