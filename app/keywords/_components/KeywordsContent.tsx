@@ -95,7 +95,7 @@ export default function KeywordsContent({ keywords }: { keywords: KeywordRespons
                     <div className="flex flex-col">
                       <span className="font-bold text-gray-200">{keyword.keyword}</span>
                       <span className="text-xs text-gray-400">
-                        언급 {keyword.mentionCount}회 · 기사 {keyword.relatedArticleCount}건
+                        언급 {keyword.mentionCount}회
                       </span>
                     </div>
                   </div>
