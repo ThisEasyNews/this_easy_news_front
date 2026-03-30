@@ -2,7 +2,8 @@ import Link from 'next/link';
 import { ChevronLeft, ExternalLink } from 'lucide-react';
 import { fetchArticleById, formatDate } from '../../_lib/api';
 
-const INSIGHT_CATEGORIES = ['정치', '경제', 'IT/과학'];
+const INSIGHT_CATEGORIES = ['정치', '경제', 'IT·과학'];
+debugger;
 
 export default async function ArticleDetailPage({
   params,
