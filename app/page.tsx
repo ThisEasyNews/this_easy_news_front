@@ -1,5 +1,5 @@
-import BriefingPageContent from './_components/BriefingPageContent';
+import HomePageContent from './_components/home/HomePageContent';
 
 export default function HomePage() {
-  return <BriefingPageContent />;
+  return <HomePageContent />;
 }
