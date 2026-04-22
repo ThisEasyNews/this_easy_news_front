@@ -4,11 +4,17 @@ export type User = {
   name: string;
   nickname?: string | null;
   profileImageUrl?: string | null;
-  roleCode?: string;
+  onboardingCompleted?: boolean;
 };
 
 export type AuthState = {
   isAuthenticated: boolean;
   isLoading: boolean;
   user: User | null;
+};
+
+export type ApiResponse<T> = {
+  success: boolean;
+  message: string;
+  data: T;
 };

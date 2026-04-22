@@ -13,7 +13,6 @@ import type { AuthState, User } from '../_types/auth';
 
 type AuthContextValue = AuthState & {
   refreshAuth: () => Promise<void>;
-  logout: () => void;
 };
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -25,7 +24,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const refreshAuth = useCallback(async () => {
     try {
       setIsLoading(true);
+      console.log('isLoading',isLoading);
       const me = await fetchMe();
+      console.log('me:', me);
       setUser(me);
     } catch (error) {
       console.error('auth refresh error:', error);
@@ -33,10 +34,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } finally {
       setIsLoading(false);
     }
-  }, []);
-
-  const logout = useCallback(() => {
-    setUser(null);
   }, []);
 
   useEffect(() => {
@@ -49,9 +46,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       isLoading,
       user,
       refreshAuth,
-      logout,
     }),
-    [user, isLoading, refreshAuth, logout]
+    [user, isLoading, refreshAuth]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

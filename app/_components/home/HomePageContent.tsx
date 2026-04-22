@@ -1,23 +1,15 @@
-'use client';
+// ❌ 'use client' 제거
 
-import GuestHomePageContent from './GuestHomePageContent';
-import MemberHomePageContent from './MemberHomePageContent';
-import { useAuth } from '../../_providers/AuthProvider';
+import VisitorHomeContent from './VisitorHomeContent';
+import MemberHomeContent from './MemberHomeContent';
+
+// 지금은 백엔드 없으니까 강제로 false
+const isAuthenticated = false;
 
 export default function HomePageContent() {
-  const { isAuthenticated, isLoading } = useAuth();
-
-  if (isLoading) {
-    return (
-      <main className="flex min-h-[60vh] items-center justify-center">
-        <p className="text-sm text-gray-500">로딩 중...</p>
-      </main>
-    );
-  }
-
   if (!isAuthenticated) {
-    return <GuestHomePageContent />;
+    return <VisitorHomeContent />;
   }
 
-  return <MemberHomePageContent />;
+  return <MemberHomeContent />;
 }

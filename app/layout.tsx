@@ -19,10 +19,9 @@
 //     </html>
 //   );
 // }
-
 import './globals.css';
 import { AuthProvider } from './_providers/AuthProvider';
-import Header from './_components/common/Header';
+import MainLayout from './_components/MainLayout';
 
 export default function RootLayout({
   children,
@@ -33,8 +32,7 @@ export default function RootLayout({
     <html lang="ko">
       <body>
         <AuthProvider>
-          <Header />
-          {children}
+          <MainLayout>{children}</MainLayout>
         </AuthProvider>
       </body>
     </html>

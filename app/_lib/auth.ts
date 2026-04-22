@@ -1,31 +1,43 @@
-import type { User } from '../_types/auth';
+import type { ApiResponse, User } from '../_types/auth';
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export async function fetchMe(): Promise<User | null> {
   if (!BASE_URL) {
-    throw new Error('NEXT_PUBLIC_API_BASE_URL 값이 없습니다.');
-  }
-
-  const response = await fetch(`${BASE_URL}/api/users/me`, {
-    method: 'GET',
-    credentials: 'include',
-    cache: 'no-store',
-  });
-
-  if (response.status === 401) {
+    console.log('BASE_URL 없음');
     return null;
   }
 
-  if (!response.ok) {
-    throw new Error('사용자 정보를 불러오지 못했습니다.');
+  try {
+    const response = await fetch(`${BASE_URL}/api/users/me`, {
+      method: 'GET',
+      credentials: 'include',
+      cache: 'no-store',
+    });
+
+    console.log('users/me status:', response.status);
+
+    if (response.status === 401) {
+      console.log('401이라서 null 반환');
+      return null;
+    }
+
+    if (!response.ok) {
+      console.log('response not ok');
+      return null;
+    }
+
+    const result: ApiResponse<User> = await response.json();
+    console.log('users/me result:', result);
+
+    if (!result.success) {
+      console.log('success false');
+      return null;
+    }
+
+    return result.data;
+  } catch (error) {
+    console.error('fetchMe error:', error);
+    return null;
   }
-
-  const result = await response.json();
-
-  if (!result.success) {
-    throw new Error(result.message || '사용자 정보 조회 실패');
-  }
-
-  return result.data;
 }
