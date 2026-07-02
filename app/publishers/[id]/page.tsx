@@ -1,21 +1,32 @@
 import Link from 'next/link';
-import { ChevronLeft, Filter } from 'lucide-react';
-import { fetchArticlesByPublisher, fetchPublishers, formatDate } from '../../_lib/api';
+import { ChevronLeft } from 'lucide-react';
+import FilterChipBar from '../../_components/common/FilterChipBar';
+import {
+  fetchArticlesByPublisher,
+  fetchCategories,
+  fetchPublishers,
+  formatDate,
+} from '../../_lib/api';
 import type { Article } from '../../_types';
 
 export default async function PublisherDetailPage({
   params,
+  searchParams,
 }: Readonly<{
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ category?: string }>;
 }>) {
   const { id } = await params;
+  const { category: categoryId } = await searchParams;
 
-  const [publishersResult, articlesResult] = await Promise.allSettled([
+  const [publishersResult, categoriesResult, articlesResult] = await Promise.allSettled([
     fetchPublishers(),
-    fetchArticlesByPublisher(id),
+    fetchCategories(),
+    fetchArticlesByPublisher(id, categoryId),
   ]);
 
   const publishers = publishersResult.status === 'fulfilled' ? publishersResult.value : [];
+  const categories = categoriesResult.status === 'fulfilled' ? categoriesResult.value : [];
   const articles: Article[] =
     articlesResult.status === 'fulfilled'
       ? articlesResult.value.content.map((a) => ({
@@ -48,10 +59,15 @@ export default async function PublisherDetailPage({
         <h2 className="text-2xl font-bold text-white">
           {publisher?.name ?? id} 뉴스 리스트
         </h2>
-        <div className="flex items-center gap-2 text-xs text-[#3B82F6] font-bold uppercase tracking-wider">
-          <Filter className="w-3 h-3" /> All Categories
-        </div>
       </div>
+
+      <FilterChipBar
+        label="Category"
+        basePath={`/publishers/${id}`}
+        paramName="category"
+        activeId={categoryId}
+        items={categories.map((category) => ({ id: category.id, name: category.name }))}
+      />
 
       {articles.length === 0 ? (
         <div className="bg-[#1F2937] rounded-2xl border border-gray-800 p-6 text-center text-gray-400">

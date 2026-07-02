@@ -5,3 +5,14 @@
 
 @import 'tw-animate-css';
 @import '../styles/theme.css';
+
+@layer utilities {
+  .scrollbar-hide {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}

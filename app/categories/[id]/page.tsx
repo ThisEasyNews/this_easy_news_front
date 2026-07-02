@@ -1,21 +1,32 @@
 import Link from 'next/link';
 import { ChevronLeft } from 'lucide-react';
-import { fetchArticlesByCategory, fetchCategories, formatDate } from '../../_lib/api';
+import FilterChipBar from '../../_components/common/FilterChipBar';
+import {
+  fetchArticlesByCategory,
+  fetchCategories,
+  fetchPublishers,
+  formatDate,
+} from '../../_lib/api';
 import type { Article } from '../../_types';
 
 export default async function CategoryDetailPage({
   params,
+  searchParams,
 }: Readonly<{
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ media?: string }>;
 }>) {
   const { id } = await params;
+  const { media: mediaId } = await searchParams;
 
-  const [categoriesResult, articlesResult] = await Promise.allSettled([
+  const [categoriesResult, publishersResult, articlesResult] = await Promise.allSettled([
     fetchCategories(),
-    fetchArticlesByCategory(id),
+    fetchPublishers(),
+    fetchArticlesByCategory(id, mediaId),
   ]);
 
   const categories = categoriesResult.status === 'fulfilled' ? categoriesResult.value : [];
+  const publishers = publishersResult.status === 'fulfilled' ? publishersResult.value : [];
   const articles: Article[] =
     articlesResult.status === 'fulfilled'
       ? articlesResult.value.content.map((a) => ({
@@ -50,6 +61,14 @@ export default async function CategoryDetailPage({
           {category?.name ?? id} 분야의 최신 뉴스를 확인하세요.
         </p>
       </div>
+
+      <FilterChipBar
+        label="Media company"
+        basePath={`/categories/${id}`}
+        paramName="media"
+        activeId={mediaId}
+        items={publishers.map((publisher) => ({ id: publisher.id, name: publisher.name }))}
+      />
 
       {articles.length === 0 ? (
         <div className="bg-[#1F2937] rounded-2xl border border-gray-800 p-6 text-center text-gray-400">

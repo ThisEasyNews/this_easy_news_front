@@ -40,20 +40,22 @@ export async function fetchCategories(): Promise<CategoryResponse[]> {
 
 export async function fetchArticlesByPublisher(
   mediaId: string,
+  categoryId?: string,
   page = 0,
 ): Promise<PageResponse<NewsResponse>> {
-  return apiFetch<PageResponse<NewsResponse>>(
-    `/api/news/media/${mediaId}?page=${page}&size=20`,
-  );
+  const params = new URLSearchParams({ mediaId, page: String(page), size: '20' });
+  if (categoryId) params.set('categoryId', categoryId);
+  return apiFetch<PageResponse<NewsResponse>>(`/api/news/search?${params}`);
 }
 
 export async function fetchArticlesByCategory(
   categoryId: string,
+  mediaId?: string,
   page = 0,
 ): Promise<PageResponse<NewsResponse>> {
-  return apiFetch<PageResponse<NewsResponse>>(
-    `/api/news/category/${categoryId}?page=${page}&size=20`,
-  );
+  const params = new URLSearchParams({ categoryId, page: String(page), size: '20' });
+  if (mediaId) params.set('mediaId', mediaId);
+  return apiFetch<PageResponse<NewsResponse>>(`/api/news/search?${params}`);
 }
 
 export async function fetchArticleById(id: number): Promise<NewsResponse> {
